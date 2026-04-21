@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Artist.Name}} - Groupie-Tracker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <a href="/" class="back">← Back Home</a>
+    <div class="detail-container">
+        <div class="artist">
+            <h1>{{.Artist.Name}}</h1>
+            <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
+            <h3>Founded in: {{.Artist.CreationDate}}</h3>
+        </div>
+        <div class="artistDetails">
+            <div class="members">
+                <h3 class="title">Members</h3>
+                {{range .Artist.Members}}
+                    <li>{{.}}</li>
+                {{end}}
+            </div>
+    
+            <div class="relations">
+                <h3 class="title">Relation</h3>
+                {{range $loc, $dates := .Relation.DatesLocations}}
+                    <div class="location-box">
+                        <h4>{{$loc}} </h4>
+                        {{range $dates}}
+                            <li>- {{.}}</li>
+                        {{end}}
+                    </div>
+                {{end}}
+            </div>
+            <div class="locations">
+                <h3 class="title">Location</h3>
+                {{range .Location.Locations}}
+                    <li>{{.}}</li>
+                {{end}}
+            </div>
+            <div class="dates">
+                <h3 class="title">Date</h3>
+                {{range .Date.Dates}}
+                    <li>{{.}}</li>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([0, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        const locationDetail = {{.Data}};
+        const markers = [];
+
+        locationDetail.forEach(loc => {
+            const marker = L.marker([
+                parseFloat(loc.lat),
+                parseFloat(loc.lon)
+            ])
+            .addTo(map)
+            .bindPopup(loc.display_name);
+
+            markers.push(marker);
+        });
+
+        if (markers.length > 0) {
+            const group = L.featureGroup(markers);
+            map.fitBounds(group.getBounds());
+        }
+        console.log(locationDetail)
+    </script>
+</body>
+</html>

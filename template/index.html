@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie-Tracker</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <h1><a href="/" class="ProName">Groupie-Tracker</a></h1>
+    <form action="/" method="get" class="form">
+        <input type="text" name="search" placeholder="search by names" class="input">
+        <button type="submit" class="search">Search</button>
+    </form>
+    <form action="/filter" method="get" class="filter">
+        <legend>Filter By:</legend>
+        <select name="filters" id="filters">
+            <option value="" selected disabled>Choose filter...</option>
+            <option value="creationDate" {{if eq .Opt "creationDate"}} selected{{end}}>Creation Date</option>
+            <option value="firstAlbum" {{if eq .Opt "firstAlbum"}} selected{{end}}>First album date</option>
+            <option value="members" {{if eq .Opt "members"}} selected{{end}}>Number of members</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+    <div class="cards">
+        {{range .Artist}}
+            <div class="card">
+                <h2>{{.Name}}</h2>
+                <img src="{{.Image}}" alt="{{.Name}}" width="200px">
+                <h3>First Album: {{.FirstAlbum}}</h3>
+                <h3>Creation Date: {{.CreationDate}}</h3>
+                <a href="/details?id={{.Id}}" class="details">View Details</a>
+            </div>
+        {{end}}
+    </div>
+</body>
+</html>

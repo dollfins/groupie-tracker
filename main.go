@@ -56,7 +56,7 @@ func main() {
 	autoRefresh(10 * time.Minute)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/{&}", tree.HomeHandler)
+	mux.HandleFunc("/{$}", tree.HomeHandler)
 	mux.HandleFunc("/details", tree.DetailHandler)
 	mux.HandleFunc("/filter", tree.FilterHandler)
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
